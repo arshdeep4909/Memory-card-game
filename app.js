@@ -1,7 +1,7 @@
 //Selectors
 const section = document.querySelector("section");
 const playerLivesCount = document.querySelector("span");
-const playerLives = 6;
+let playerLives = 6;
 
 // Linking text
 playerLivesCount.textContent = playerLives;
@@ -69,6 +69,7 @@ const CheckCards = (e) => {
   const clickedCard = e.target.parentElement;
   clickedCard.classList.add("flipped");
   const flippedCards = document.querySelectorAll(".flipped");
+  const toggleCard = document.querySelectorAll(".toggleCard");
   // we add flipped to the card because we are going to use it
   // to create a function which checks two cards when flipped
   // if they are same or not
@@ -93,8 +94,43 @@ const CheckCards = (e) => {
         // if the second card does not match the first card is flipped
         //back instantly
       });
+      playerLives--;
+      playerLivesCount.textContent = playerLives;
+      if (playerLives === 0) {
+        setTimeout(() => {
+          restart("Please try again");
+        }, 100);
+      }
     }
+  }
+  // run a check to see if we won the game
+  if (toggleCard.length === 16) {
+    restart("winner winner chicken dinner");
   }
 };
 
+//Restart
+
+const restart = (text) => {
+  let cardData = randomize();
+  let faces = document.querySelectorAll(".face");
+  let cards = document.querySelectorAll(".card");
+  (section.style.pointerEvents = "none"),
+    cardData.forEach((item, index) => {
+      cards[index].classList.remove("toggleCard");
+      //so that we can click on
+      cards[index].style.pointerEvents = "all";
+      //randomizing again as the game resets
+      setTimeout(() => {
+        faces[index].src = item.imgSrc;
+        cards[index].setAttribute("name", item.name);
+        section.style.pointerEvents = "all";
+      }, 100);
+    });
+  playerLives = 6;
+  playerLivesCount.textContent = playerLives;
+  setTimeout(() => {
+    window.alert(text), 100;
+  });
+};
 cardGenerator();
