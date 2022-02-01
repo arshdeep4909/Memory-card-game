@@ -49,6 +49,8 @@ const cardGenerator = () => {
     back.classList = "back";
     //attach the tiem to image source
     face.src = item.imgSrc;
+    //attaching the name to each card created
+    card.setAttribute("name", item.name);
 
     //Attach the cards to the section
     section.appendChild(card);
@@ -64,8 +66,35 @@ const cardGenerator = () => {
 
 //Check Cards
 const CheckCards = (e) => {
-  const clickCard = e.target.parentElement;
-  console.log(clickCard);
+  const clickedCard = e.target.parentElement;
+  clickedCard.classList.add("flipped");
+  const flippedCards = document.querySelectorAll(".flipped");
+  // we add flipped to the card because we are going to use it
+  // to create a function which checks two cards when flipped
+  // if they are same or not
+  //Logic
+  if (flippedCards.length === 2) {
+    if (
+      flippedCards[0].getAttribute("name") ===
+      flippedCards[1].getAttribute("name")
+    ) {
+      console.log("match");
+      flippedCards.forEach((card) => {
+        card.classList.remove("flipped");
+        card.style.pointerEvents = "none"; //makes them unclickable
+        // so they just sit upright
+      });
+    } else {
+      console.log("unmatched");
+      flippedCards.forEach((card) => {
+        card.classList.remove("flipped");
+        setTimeout(() => card.classList.remove("toggleCard"), 1000);
+        // we add time out as we delay the animation otherwise
+        // if the second card does not match the first card is flipped
+        //back instantly
+      });
+    }
+  }
 };
 
 cardGenerator();
